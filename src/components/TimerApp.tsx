@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Controls from "./Controls";
 import TimerDisplay from "./TimerDisplay";
 import { useState, useEffect } from "react";
+import { playNotificationSound } from "@/utils/sound";
 
 //タイマーのモードをを表す型
 type Mode = "work" | "break";
@@ -49,7 +50,8 @@ export default function TimerApp() {
             //分が0秒が0の場合、タイマーを停止する
             if (prev.minutes === 0) {
               setIsRunning(false);
-              toggleMode(); //モードを切り替える
+              toggleMode();//モードを切り替える
+              void playNotificationSound(); //通知音を再生
               return prev; //現在の状態(0分、0秒)を返す
             }
 
@@ -79,7 +81,7 @@ export default function TimerApp() {
           </CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col items-center gap-6">
-          <TimerDisplay minutes={timeleft.minutes} seconds={timeleft.seconds} />
+          <TimerDisplay minutes={timeleft.minutes} seconds={timeleft.seconds} mode={mode} />
           <Controls
             onStart={handleStart}
             onReset={handleReset}
