@@ -2,6 +2,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Controls from "./Controls";
+import MetadataUpdater from "./MetadataUpdater";
 import TimerDisplay from "./TimerDisplay";
 import { useState, useEffect } from "react";
 import { playNotificationSound } from "@/utils/sound";
@@ -82,6 +83,7 @@ export default function TimerApp() {
         </CardHeader>
         <CardContent className="flex flex-col items-center gap-6">
           <TimerDisplay minutes={timeleft.minutes} seconds={timeleft.seconds} mode={mode} />
+          <MetadataUpdater minutes={timeleft.minutes} seconds={timeleft.seconds} mode={mode} />
           <Controls
             onStart={handleStart}
             onReset={handleReset}
