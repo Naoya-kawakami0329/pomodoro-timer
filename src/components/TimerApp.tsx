@@ -1,6 +1,6 @@
 "use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle,CardFooter} from "@/components/ui/card";
 import Controls from "./Controls";
 import MetadataUpdater from "./MetadataUpdater";
 import TimerDisplay from "./TimerDisplay";
@@ -91,6 +91,11 @@ export default function TimerApp() {
             isRunning={isRunning}
           />
         </CardContent>
+        <CardFooter>
+          <p className="text-sm text-muted-foreground">
+            {mode==="work"?"作業モード":"休憩モード"}
+          </p>
+        </CardFooter>
       </Card>
     </div>
   );
