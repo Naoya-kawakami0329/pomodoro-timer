@@ -10,11 +10,21 @@ import { playNotificationSound } from "@/utils/sound";
 //タイマーのモードをを表す型
 type Mode = "work" | "break";
 
+
+
 export default function TimerApp() {
   //タイマーの実行状態を管理するState
   const [isRunning, setIsRunning] = useState(false);
-  //タイマーの残り時間を保持する状態関数
-  const [timeleft, setTimeleft] = useState({ minutes: 25, seconds: 0 });
+  
+  //作業時間を管理する状態変数
+const [workDuration, setWorkDuration] = useState(25);
+
+//休憩時間を管理する状態変数
+const [breakDuration, setBreakDuration] = useState(5);
+
+//タイマーの残り時間を保持する状態関数
+  const [timeleft, setTimeleft] = useState({ minutes: workDuration, seconds: 0 });
+
   //タイマーのモードを管理する状態関数
   const [mode, setMode] = useState<Mode>("work");
   //タイマーのモードを切り替える関数
@@ -24,7 +34,7 @@ export default function TimerApp() {
     setMode(newMode);
     //タイマーの残り時間をリセットする
     //作業モードなら25分、休憩モードなら5分
-    setTimeleft({ minutes: newMode === "work" ? 25 : 5, seconds: 0 });
+    setTimeleft({ minutes: newMode === "work" ? workDuration : 5, seconds: 0 });
     //タイマーを停止する
     setIsRunning(false);
     //タイマーのモードを切り替える
@@ -38,7 +48,7 @@ export default function TimerApp() {
   //リセットボタンのハンドラ
   const handleReset=()=>{
     setIsRunning(false);
-    setTimeleft({minutes:mode==="work"?25:5,seconds:0});
+    setTimeleft({minutes:mode==="work"?workDuration:5,seconds:0});
   }
 
   useEffect(() => {
@@ -91,10 +101,26 @@ export default function TimerApp() {
             isRunning={isRunning}
           />
         </CardContent>
-        <CardFooter>
-          <p className="text-sm text-muted-foreground">
-            {mode==="work"?"作業モード":"休憩モード"}
-          </p>
+        <CardFooter className="flex justify-center items-center gap-2">
+            <label className="text-sm text-medium">
+              作業時間
+            </label>
+            <select className="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              value={workDuration}
+              onChange={(e)=>{
+                const newDuration = parseInt(e.target.value);
+                setWorkDuration(newDuration);
+                if(mode==="work" && !isRunning){
+                  setTimeleft({minutes:newDuration,seconds:0});
+                }
+              }}
+            >
+              {
+                [5,10,15,25,30,45,60].map((minutes)=>(
+                  <option key={minutes} value={minutes}>{minutes}分</option>
+                ))
+              }
+            </select>
         </CardFooter>
       </Card>
     </div>
