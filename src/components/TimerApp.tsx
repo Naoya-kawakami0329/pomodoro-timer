@@ -7,6 +7,8 @@ import TimerDisplay from "./TimerDisplay";
 import { useState, useEffect, useRef } from "react";
 import {useReward} from "react-rewards";
 import { playNotificationSound } from "@/utils/sound";
+import { Switch } from "@/components/ui/switch";
+
 
 
 //タイマーのモードをを表す型
@@ -35,6 +37,9 @@ const [breakDuration, setBreakDuration] = useState(5);
 
   //タイマーのモードを管理する状態関数
   const [mode, setMode] = useState<Mode>("work");
+
+  //自動開始の設定
+  const [autoStart, setAutoStart] = useState(false);
   //タイマーのモードを切り替える関数
   const toggleMode = () => {
     //モードを切り替える
@@ -43,8 +48,8 @@ const [breakDuration, setBreakDuration] = useState(5);
     //タイマーの残り時間をリセットする
     //作業モードなら25分、休憩モードなら5分
     setTimeleft({ minutes: newMode === "work" ? workDuration : breakDuration, seconds: 0 });
-    //タイマーを停止する
-    setIsRunning(false);
+    //自動開始の設定が有効ならタイマーを自動的に開始する
+    setIsRunning(autoStart);
     //タイマーのモードを切り替える
     setMode(mode === "work" ? "break" : "work");
   };
@@ -69,11 +74,15 @@ const [breakDuration, setBreakDuration] = useState(5);
             //分が0秒が0の場合、タイマーを停止する
             if (prev.minutes === 0) {
               setIsRunning(false);
-              toggleMode();//モードを切り替える
+              
              if(mode==="work"){
               void confetti();
              }
               void playNotificationSound(); //通知音を再生
+              //少し遅延させてからモード切り替えと自動開始を実行
+              setTimeout(()=>{
+                toggleMode();//モードを自動的に切り替える
+              },1000);
               return prev; //現在の状態(0分、0秒)を返す
             }
 
@@ -157,6 +166,18 @@ const [breakDuration, setBreakDuration] = useState(5);
                 ))
               }
             </select>
+          </div>
+          {/* 自動開始の設定 */}
+          <div className="flex items-center gap-2 w-full justify-between">
+            <label className="text-sm text-medium min-w-[4.5rem]">
+              自動開始
+            </label>
+            <Switch
+              checked={autoStart}
+              onCheckedChange={()=>{
+                setAutoStart(!autoStart);
+              }}
+            />
           </div>
         </CardFooter>
       </Card>
