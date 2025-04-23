@@ -4,8 +4,10 @@ import { Card, CardContent, CardHeader, CardTitle,CardFooter} from "@/components
 import Controls from "./Controls";
 import MetadataUpdater from "./MetadataUpdater";
 import TimerDisplay from "./TimerDisplay";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import {useReward} from "react-rewards";
 import { playNotificationSound } from "@/utils/sound";
+
 
 //タイマーのモードをを表す型
 type Mode = "work" | "break";
@@ -13,6 +15,12 @@ type Mode = "work" | "break";
 
 
 export default function TimerApp() {
+  const {reward:confetti,isAnimating} = useReward("confettiReward", "confetti",{
+    elementCount:100,
+    spread:70,
+    decay:0.93,
+    lifetime:150,
+  });
   //タイマーの実行状態を管理するState
   const [isRunning, setIsRunning] = useState(false);
   
@@ -62,6 +70,9 @@ const [breakDuration, setBreakDuration] = useState(5);
             if (prev.minutes === 0) {
               setIsRunning(false);
               toggleMode();//モードを切り替える
+             if(mode==="work"){
+              void confetti();
+             }
               void playNotificationSound(); //通知音を再生
               return prev; //現在の状態(0分、0秒)を返す
             }
@@ -84,7 +95,8 @@ const [breakDuration, setBreakDuration] = useState(5);
   
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background p-4">
+    <div className="min-h-screen flex items-center justify-center bg-background p-4 relative">
+      <span id="confettiReward" className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"/>
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle className="text-2xl font-bold text-center">
