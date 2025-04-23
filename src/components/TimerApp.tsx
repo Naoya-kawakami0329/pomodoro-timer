@@ -34,7 +34,7 @@ const [breakDuration, setBreakDuration] = useState(5);
     setMode(newMode);
     //タイマーの残り時間をリセットする
     //作業モードなら25分、休憩モードなら5分
-    setTimeleft({ minutes: newMode === "work" ? workDuration : 5, seconds: 0 });
+    setTimeleft({ minutes: newMode === "work" ? workDuration : breakDuration, seconds: 0 });
     //タイマーを停止する
     setIsRunning(false);
     //タイマーのモードを切り替える
@@ -101,8 +101,10 @@ const [breakDuration, setBreakDuration] = useState(5);
             isRunning={isRunning}
           />
         </CardContent>
-        <CardFooter className="flex justify-center items-center gap-2">
-            <label className="text-sm text-medium">
+        <CardFooter className="flex flex-col gap-4 w-full max-w-[200px] mx-auto">
+          {/* 作業時間の設定 */}
+          <div className="flex items-center gap-2">
+            <label className="text-sm text-medium min-w-[4.5rem]">
               作業時間
             </label>
             <select className="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -121,6 +123,29 @@ const [breakDuration, setBreakDuration] = useState(5);
                 ))
               }
             </select>
+          </div>
+          {/* 休憩時間の設定 */}
+          <div className="flex items-center gap-2">
+            <label className="text-sm text-medium min-w-[4.5rem]">
+              休憩時間
+            </label>
+            <select className="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              value={breakDuration}
+              onChange={(e)=>{
+                const newDuration = parseInt(e.target.value);
+                setBreakDuration(newDuration);
+                if(mode==="break" && !isRunning){
+                  setTimeleft({minutes:newDuration,seconds:0});
+                }
+              }}
+            >
+              {
+                [1,2,3,5,10].map((minutes)=>(
+                  <option key={minutes} value={minutes}>{minutes}分</option>
+                ))
+              }
+            </select>
+          </div>
         </CardFooter>
       </Card>
     </div>
