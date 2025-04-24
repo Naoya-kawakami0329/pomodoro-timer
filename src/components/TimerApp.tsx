@@ -128,7 +128,7 @@ const [breakDuration, setBreakDuration] = useState(5);
             <label className="text-sm text-medium min-w-[4.5rem]">
               作業時間
             </label>
-            <select className="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            <select className="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 cursor-pointer focus:ring-blue-500"
               value={workDuration}
               onChange={(e)=>{
                 const newDuration = parseInt(e.target.value);
@@ -150,7 +150,7 @@ const [breakDuration, setBreakDuration] = useState(5);
             <label className="text-sm text-medium min-w-[4.5rem]">
               休憩時間
             </label>
-            <select className="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            <select className="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
               value={breakDuration}
               onChange={(e)=>{
                 const newDuration = parseInt(e.target.value);
@@ -177,6 +177,7 @@ const [breakDuration, setBreakDuration] = useState(5);
               onCheckedChange={()=>{
                 setAutoStart(!autoStart);
               }}
+              className="cursor-pointer"
             />
           </div>
         </CardFooter>
