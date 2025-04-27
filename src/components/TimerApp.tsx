@@ -8,6 +8,7 @@ import { useState, useEffect, useRef } from "react";
 import {useReward} from "react-rewards";
 import { playNotificationSound } from "@/utils/sound";
 import { Switch } from "@/components/ui/switch";
+import { generateRefreshSuggestion } from "@/utils/gemini";
 
 
 
@@ -100,7 +101,6 @@ const [breakDuration, setBreakDuration] = useState(5);
     };
   }, [isRunning]);
 
-  
   
 
   return (
