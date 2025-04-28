@@ -1,14 +1,19 @@
-import { Button } from '@/components/ui/button';
-import { Play, Pause, RotateCcw, Timer } from 'lucide-react';
- 
+import { Button } from "@/components/ui/button";
+import { Play, Pause, RotateCcw, Timer } from "lucide-react";
+
 interface ControlsProps {
   onStart: () => void;
   onReset: () => void;
   onModeToggle: () => void;
   isRunning: boolean;
 }
- 
-export default function Controls({ onStart, onReset, onModeToggle, isRunning }: ControlsProps) {
+
+export default function Controls({
+  onStart,
+  onReset,
+  onModeToggle,
+  isRunning,
+}: ControlsProps) {
   return (
     <div className="flex flex-col items-center gap-4 w-full max-w-xs">
       <Button
@@ -16,12 +21,18 @@ export default function Controls({ onStart, onReset, onModeToggle, isRunning }: 
         size="lg"
         onClick={onStart}
         className={`w-full transition-all duration-200 cursor-pointer ${
-          isRunning ? 'bg-orange-500 hover:bg-orange-600' : 'bg-green-700 hover:bg-green-800'
+          isRunning
+            ? "bg-orange-500 hover:bg-orange-600"
+            : "bg-green-700 hover:bg-green-800"
         }`}
       >
         <span className="flex items-center gap-2 font-bold">
-          {isRunning ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
-          {isRunning ? '停止' : '開始'}
+          {isRunning ? (
+            <Pause className="w-5 h-5" />
+          ) : (
+            <Play className="w-5 h-5" />
+          )}
+          {isRunning ? "停止" : "開始"}
         </span>
       </Button>
       <div className="flex w-full gap-3">

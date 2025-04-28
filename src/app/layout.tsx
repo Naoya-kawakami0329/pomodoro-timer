@@ -14,7 +14,8 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "AI Pomodoro Timer",
-  description: "シンプルで使いやすいポモドーロタイマーです。AIが作業効率の向上を提案してくれます。",
+  description:
+    "シンプルで使いやすいポモドーロタイマーです。AIが作業効率の向上を提案してくれます。",
 };
 
 export default function RootLayout({
