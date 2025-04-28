@@ -11,7 +11,7 @@ import Controls from "./Controls";
 import MetadataUpdater from "./MetadataUpdater";
 import RefreshSuggestion from "./RefreshSuggestion";
 import TimerDisplay from "./TimerDisplay";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect} from "react";
 import { useReward } from "react-rewards";
 import { playNotificationSound } from "@/utils/sound";
 import { Switch } from "@/components/ui/switch";
@@ -21,7 +21,7 @@ import { generateRefreshSuggestion } from "@/utils/gemini";
 type Mode = "work" | "break";
 
 export default function TimerApp() {
-  const { reward: confetti, isAnimating } = useReward(
+  const { reward: confetti} = useReward(
     "confettiReward",
     "confetti",
     {
