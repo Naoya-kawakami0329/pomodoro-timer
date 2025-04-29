@@ -11,6 +11,7 @@ import Controls from "./Controls";
 import MetadataUpdater from "./MetadataUpdater";
 import RefreshSuggestion from "./RefreshSuggestion";
 import TimerDisplay from "./TimerDisplay";
+import CameraPreview from "./CameraPreview";
 import { useState, useEffect} from "react";
 import { useReward } from "react-rewards";
 import { playNotificationSound } from "@/utils/sound";
@@ -130,6 +131,7 @@ export default function TimerApp() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background p-4 relative">
+      <CameraPreview />
       <span
         id="confettiReward"
         className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
