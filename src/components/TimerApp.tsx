@@ -32,6 +32,7 @@ export default function TimerApp() {
       lifetime: 150,
     },
   );
+
   //タイマーの実行状態を管理するState
   const [isRunning, setIsRunning] = useState(false);
 
@@ -93,6 +94,12 @@ export default function TimerApp() {
     setTimeleft({ minutes: mode === "work" ? workDuration : 5, seconds: 0 });
   };
 
+  const [badDetected, setBadDetected] = useState(false);
+  const handleBadPosture = () => {
+    console.log("BAD姿勢検知!");
+    setBadDetected(true);
+  };
+
   useEffect(() => {
     //setIntervalの戻り値(タイマーID)を保持する関数
     let intervalId: NodeJS.Timeout;
@@ -131,7 +138,12 @@ export default function TimerApp() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background p-4 relative">
-      <CameraPreview />
+      <CameraPreview onBadPosture={handleBadPosture} />
+      {badDetected && (
+      <p className="fixed top-10 bg-red-600 text-white p-2 rounded">
+        BAD姿勢を検知！
+      </p>
+    )}
       <span
         id="confettiReward"
         className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
