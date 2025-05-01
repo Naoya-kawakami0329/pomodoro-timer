@@ -12,6 +12,7 @@ export default function usePosture(onBadPosture: () => void) {
   const [landmarker, setLandmarker] = useState<PoseLandmarker | null>(null);
   const [lastAlertTime, setLastAlertTime] = useState<number>(0);
   const [badStartTime, setBadStartTime] = useState<number | null>(null);
+  const [badDetected, setBadDetected] = useState<boolean>(false);
 
   // モデル読み込み＆カメラ初期化
   useEffect(() => {
@@ -74,14 +75,38 @@ export default function usePosture(onBadPosture: () => void) {
         const results = landmarker.detectForVideo(videoRef.current, performance.now());
         if (results.landmarks[0]) {
           const landmarks = results.landmarks[0];
-          const leftShoulder = landmarks[11]; // 左肩
-          const leftEar = landmarks[7]; // 左耳
+          const nose = landmarks[0]; // 鼻
+          const neck = landmarks[11]; // 首（左肩）
+          const chest = landmarks[12]; // 胸（右肩）
           
-          const dx = leftEar.x - leftShoulder.x;
-          const dy = leftEar.y - leftShoulder.y;
-          const angle = Math.abs((Math.atan2(dy, dx) * 180) / Math.PI);
+          // 首から胸へのベクトル（水平方向の基準）
+          const chestVector = {
+            x: chest.x - neck.x,
+            y: chest.y - neck.y
+          };
+          
+          // 首から鼻へのベクトル
+          const headVector = {
+            x: nose.x - neck.x,
+            y: nose.y - neck.y
+          };
+          
+          // 内積を計算
+          const dotProduct = chestVector.x * headVector.x + chestVector.y * headVector.y;
+          
+          // ベクトルの長さを計算
+          const chestLength = Math.sqrt(chestVector.x * chestVector.x + chestVector.y * chestVector.y);
+          const headLength = Math.sqrt(headVector.x * headVector.x + headVector.y * headVector.y);
+          
+          // 角度を計算（ラジアンから度に変換）
+          const angle = Math.acos(dotProduct / (chestLength * headLength)) * (180 / Math.PI);
+          
+          // 首が前に傾いているかどうかを判定（垂直方向の成分を重視）
+          const verticalComponent = Math.abs(headVector.y / headLength);
+          const isBad = verticalComponent > 0.2 && verticalComponent < 0.8; // 0.8以上の場合は良い姿勢と判定
+          
+          console.log('垂直成分:', verticalComponent, '悪い姿勢:', isBad);
           const now = Date.now();
-          const isBad = angle > 50;
 
           if (isBad) {
             if (!badStartTime) {
@@ -93,9 +118,11 @@ export default function usePosture(onBadPosture: () => void) {
               onBadPosture();
               setLastAlertTime(now);
               setBadStartTime(now);
+              setBadDetected(true);
             }
           } else {
             setBadStartTime(null);
+            setBadDetected(false);
           }
         }
       }
@@ -105,5 +132,5 @@ export default function usePosture(onBadPosture: () => void) {
     return () => cancelAnimationFrame(rafId);
   }, [landmarker, badStartTime, lastAlertTime, onBadPosture]);
 
-  return { videoRef };
+  return { videoRef, badDetected };
 }
